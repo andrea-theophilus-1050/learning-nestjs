@@ -39,13 +39,13 @@ export class ProductController {
     @Body(new ValidationPipe()) productDto: ProductDto,
   ): ResponseData<ProductDto> {
     try {
-      return new ResponseData<ProductDto>(
-        productDto,
+      return new ResponseData<Product>(
+        this.productService.createProduct(productDto),
         ResponseCode.SUCCESS,
         ResponseMessage.SUCCESS,
       );
     } catch (e) {
-      return new ResponseData<ProductDto>(
+      return new ResponseData<Product>(
         e,
         ResponseCode.BAD_REQUEST,
         ResponseMessage.BAD_REQUEST,
@@ -70,15 +70,18 @@ export class ProductController {
   }
 
   @Put('/:id')
-  updateProduct(): ResponseData<Product[]> {
+  updateProduct(
+    @Body(new ValidationPipe()) productDto: ProductDto,
+    @Param('id') id: number,
+  ): ResponseData<Product> {
     try {
-      return new ResponseData<Product[]>(
-        this.productService.getAllProducts(),
+      return new ResponseData<Product>(
+        this.productService.updateProduct(productDto, id),
         ResponseCode.SUCCESS,
         ResponseMessage.SUCCESS,
       );
     } catch (e) {
-      return new ResponseData<Product[]>(
+      return new ResponseData<Product>(
         e,
         ResponseCode.BAD_REQUEST,
         ResponseMessage.BAD_REQUEST,
@@ -87,15 +90,15 @@ export class ProductController {
   }
 
   @Delete('/:id')
-  deleteProduct(): ResponseData<Product[]> {
+  deleteProduct(@Param('id') id: number): ResponseData<boolean> {
     try {
-      return new ResponseData<Product[]>(
-        this.productService.getAllProducts(),
+      return new ResponseData<boolean>(
+        this.productService.deleteProduct(id),
         ResponseCode.SUCCESS,
         ResponseMessage.SUCCESS,
       );
     } catch (e) {
-      return new ResponseData<Product[]>(
+      return new ResponseData<boolean>(
         e,
         ResponseCode.BAD_REQUEST,
         ResponseMessage.BAD_REQUEST,
