@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { ProductModule } from './modules/products/product.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import { CategoryModule } from './modules/categories/category.module';
+import { CarModule } from './modules/cars/car.module';
 
 @Module({
   imports: [
@@ -14,10 +16,12 @@ import { DataSource } from 'typeorm';
       username: 'root',
       password: '',
       database: 'learning-nestjs',
-      entities: [],
+      entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     ProductModule,
+    CategoryModule,
+    CarModule,
   ],
   controllers: [AppController],
   providers: [AppService],
