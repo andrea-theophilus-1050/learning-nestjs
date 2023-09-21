@@ -1,26 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
-import { CategoryEntity } from '../../entities/categories.entity';
+import { Injectable, Inject } from '@nestjs/common';
 import { Category } from '../models/category.model';
+import { ICategoryRepository } from 'src/interfaces/ICategoryRepository';
 
 @Injectable()
 export class CategoryService {
   constructor(
-    @InjectRepository(CategoryEntity)
-    private categoryRepository: Repository<CategoryEntity>,
+    @Inject('ICategoryRepository')
+    private categoryRepository: ICategoryRepository,
   ) {}
 
   async findAll(): Promise<Category[]> {
-    return await this.categoryRepository.find();
+    return await this.categoryRepository.findAll();
   }
 
   async findOne(id: number): Promise<Category> {
-    return await this.categoryRepository.findOne({ where: { id } });
+    return await this.categoryRepository.findOne(id);
   }
 
   async create(category: Category): Promise<Category> {
-    return await this.categoryRepository.save(category);
+    return await this.categoryRepository.create(category);
   }
 
   async update(id: number, category: Category): Promise<Category> {
@@ -29,7 +27,6 @@ export class CategoryService {
   }
 
   async delete(id: number): Promise<boolean> {
-    const isFlag: DeleteResult = await this.categoryRepository.delete(id);
-    return isFlag.affected === 1;
+    return await this.categoryRepository.delete(id);
   }
 }

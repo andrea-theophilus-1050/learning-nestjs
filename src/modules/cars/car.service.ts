@@ -1,26 +1,24 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DeleteResult } from 'typeorm';
-import { CarsEntity } from '../../entities/cars.entity';
+import { Injectable, Inject } from '@nestjs/common';
 import { Car } from '../models/car.model';
+import { ICarRepository } from 'src/interfaces/ICarRepository';
 
 @Injectable()
 export class CarService {
   constructor(
-    @InjectRepository(CarsEntity)
-    private carRepository: Repository<CarsEntity>,
+    @Inject('ICarRepository')
+    private carRepository: ICarRepository,
   ) {}
 
   async findAll(): Promise<Car[]> {
-    return await this.carRepository.find();
+    return await this.carRepository.findAll();
   }
 
   async findOne(id: number): Promise<Car> {
-    return await this.carRepository.findOne({ where: { id } });
+    return await this.carRepository.findOne(id);
   }
 
   async create(car: Car): Promise<Car> {
-    return await this.carRepository.save(car);
+    return await this.carRepository.create(car);
   }
 
   async update(id: number, car: Car): Promise<Car> {
@@ -29,7 +27,6 @@ export class CarService {
   }
 
   async delete(id: number): Promise<boolean> {
-    const isFlag: DeleteResult = await this.carRepository.delete(id);
-    return isFlag.affected === 1;
+    return await this.carRepository.delete(id);
   }
 }

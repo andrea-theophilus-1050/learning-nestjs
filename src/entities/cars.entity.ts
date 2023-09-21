@@ -19,10 +19,10 @@ export class CarsEntity extends BaseEntity {
   @Column()
   price: number;
 
-  @Column({ name: 'category_id' })
+  @Column()
   category_id: number;
 
   @ManyToOne(() => CategoryEntity)
-  @JoinColumn({ name: 'category_id' })
+  @JoinColumn({ name: 'category_id', referencedColumnName: 'id' })
   category: CategoryEntity;
 }
